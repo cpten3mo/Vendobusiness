@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Tracking Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="bg-light p-3">
+        <div class="container">
+            <h1 class="h3">Vendo Machine Business Dashboard</h1>
+        </div>
+    </header>
+
+    <main class="container mt-4">
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-tabs" id="businessTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="motorwash-tab" data-bs-toggle="tab" data-bs-target="#motorwash-content" type="button" role="tab" aria-controls="motorwash-content" aria-selected="true">MotorWash</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pisowifi-tab" data-bs-toggle="tab" data-bs-target="#pisowifi-content" type="button" role="tab" aria-controls="pisowifi-content" aria-selected="false">PisoWifi</button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="businessTabsContent">
+            <!-- MotorWash Tab -->
+            <div class="tab-pane fade show active" id="motorwash-content" role="tabpanel" aria-labelledby="motorwash-tab">
+                <div class="row mt-4">
+                    <!-- KPI Cards -->
+                    <div class="col-md-3"><div class="card"><div class="card-body"><h5 class="card-title">Current Month Income</h5><p class="card-text" id="mw-monthly-income">₱0</p></div></div></div>
+                    <div class="col-md-3"><div class="card"><div class="card-body"><h5 class="card-title">Current Month Expenses</h5><p class="card-text" id="mw-monthly-expenses">₱0</p></div></div></div>
+                    <div class="col-md-3"><div class="card"><div class="card-body"><h5 class="card-title">Current Month Profit</h5><p class="card-text" id="mw-monthly-profit">₱0</p></div></div></div>
+                    <div class="col-md-3"><div class="card"><div class="card-body"><h5 class="card-title">Year-to-Date Profit</h5><p class="card-text" id="mw-ytd-profit">₱0</p></div></div></div>
+                </div>
+
+                <div class="row mt-4">
+                    <!-- Charts -->
+                    <div class="col-md-8"><div class="card"><div class="card-body"><canvas id="mw-monthly-trend-chart"></canvas></div></div></div>
+                    <div class="col-md-4"><div class="card"><div class="card-body"><canvas id="mw-expense-breakdown-chart"></canvas></div></div></div>
+                </div>
+
+                <div class="mt-4">
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#transaction-modal" data-business="MotorWash">Add Transaction</button>
+                    <button class="btn btn-secondary" id="export-mw-csv">Export CSV</button>
+                    <button class="btn btn-secondary" id="import-mw-csv">Import CSV</button>
+                    <input type="file" id="import-mw-csv-input" style="display: none;" accept=".csv">
+                </div>
+
+                <!-- Transactions Table -->
+                <div class="mt-4"><div class="card"><div class="card-body"><table class="table table-striped" id="mw-transactions-table"><thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Description</th><th>Amount</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div></div>
+            </div>
+
+            <!-- PisoWifi Tab -->
+            <div class="tab-pane fade" id="pisowifi-content" role="tabpanel" aria-labelledby="pisowifi-tab">
+                <div class="row mt-4">
+                    <!-- KPI Cards -->
+                    <div class="col-md-3"><div class="card"><div class="card-body"><h5 class="card-title">Current Month Net Profit</h5><p class="card-text" id="pw-monthly-net-profit">₱0</p></div></div></div>
+                    <div class="col-md-3"><div class="card"><div class="card-body"><h5 class="card-title">Year-to-Date Net Profit</h5><p class="card-text" id="pw-ytd-net-profit">₱0</p></div></div></div>
+                    <div class="col-md-3"><div class="card"><div class="card-body"><h5 class="card-title">Monthly Comparison</h5><p class="card-text" id="pw-monthly-comparison">0%</p></div></div></div>
+                    <div class="col-md-3"><div class="card"><div class="card-body"><h5 class="card-title">Yearly Comparison</h5><p class="card-text" id="pw-yearly-comparison">0%</p></div></div></div>
+                </div>
+
+                <div class="row mt-4">
+                    <!-- Charts -->
+                    <div class="col-md-8"><div class="card"><div class="card-body"><canvas id="pw-monthly-net-profit-chart"></canvas></div></div></div>
+                    <div class="col-md-4"><div class="card"><div class="card-body"><canvas id="pw-internet-subscription-chart"></canvas></div></div></div>
+                </div>
+                 <div class="mt-4">
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#transaction-modal" data-business="PisoWifi">Add Transaction</button>
+                    <button class="btn btn-secondary" id="export-pw-csv">Export CSV</button>
+                    <button class="btn btn-secondary" id="import-pw-csv">Import CSV</button>
+                    <input type="file" id="import-pw-csv-input" style="display: none;" accept=".csv">
+                </div>
+
+                <!-- Transactions Table -->
+                <div class="mt-4"><div class="card"><div class="card-body"><table class="table table-striped" id="pw-transactions-table"><thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Description</th><th>Amount</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Transaction Modal -->
+    <div class="modal fade" id="transaction-modal" tabindex="-1" aria-labelledby="transaction-modal-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="transaction-modal-label">Add/Edit Transaction</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="transaction-form">
+                        <input type="hidden" id="transaction-id">
+                        <div class="mb-3">
+                            <label for="transaction-date" class="form-label">Date</label>
+                            <input type="date" class="form-control" id="transaction-date" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="transaction-business" class="form-label">Business</label>
+                            <select class="form-select" id="transaction-business" required>
+                                <option value="MotorWash">MotorWash</option>
+                                <option value="PisoWifi">PisoWifi</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="transaction-type" class="form-label">Type</label>
+                            <select class="form-select" id="transaction-type" required>
+                                <option value="Income">Income</option>
+                                <option value="Expense">Expense</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="transaction-category" class="form-label">Category</label>
+                            <select class="form-select" id="transaction-category" required>
+                                <!-- Options will be populated by JS -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="transaction-description" class="form-label">Description</label>
+                            <input type="text" class="form-control" id="transaction-description">
+                        </div>
+                        <div class="mb-3">
+                            <label for="transaction-amount" class="form-label">Amount</label>
+                            <input type="number" class="form-control" id="transaction-amount" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
